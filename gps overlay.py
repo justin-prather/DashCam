@@ -45,10 +45,10 @@ draw = ImageDraw.Draw(image)
 xSize = image.size[0]
 
 font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', 40)
-draw.text( (xSize - (50*3),20), "Time: " + str(tim), font=font )
+draw.text( (xSize - 20,(50*3)), "Time: " + str(tim), font=font )
 
-draw.text( (xSize - (50*2),20), "Position: " + str(lat) + ', ' + str(lon), font=font )
+draw.text( (xSize - 20,(50*2)), "Position: " + str(lat) + ', ' + str(lon), font=font )
 
-draw.text( (xSize - (50*1),20), "Altitude: " + str(alt), font=font )
+draw.text( (xSize - 20,(50*1)), "Altitude: " + str(alt), font=font )
 del draw
 image.save("ImageWithGPS_Data.jpg", "jpeg")
