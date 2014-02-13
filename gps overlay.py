@@ -16,7 +16,7 @@ while True:
 		#print report
 		if report['class'] == 'TPV':
 			if hasattr(report, 'time') & hasattr(report, 'lat') & hasattr(report, 'lon') & hasattr(report, 'alt'):
-				time = report.time
+				tim = report.time
 				lat = report.lat
 				lon = report.lon
 				alt = report.alt
@@ -42,13 +42,13 @@ image = Image.open(stream)
 
 draw = ImageDraw.Draw(image)
 
-xSize = image.size()[0]
+xSize = image.size[0]
 
 font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', 40)
-draw.text( (xSize - (50*3),20), "Time: " + time, font=font )
+draw.text( (xSize - (50*3),20), "Time: " + str(tim), font=font )
 
-draw.text( (xSize - (50*2),20), "Position: " + lat + ', ' + lon, font=font )
+draw.text( (xSize - (50*2),20), "Position: " + str(lat) + ', ' + str(lon), font=font )
 
-draw.text( (xSize - (50*1),20), "Altitude: " + alt, font=font )
+draw.text( (xSize - (50*1),20), "Altitude: " + str(alt), font=font )
 del draw
 image.save("ImageWithGPS_Data.jpg", "jpeg")

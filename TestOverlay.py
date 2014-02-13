@@ -15,8 +15,9 @@ image = Image.open(stream)
 
 draw = ImageDraw.Draw(image)
 
-font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', 30)
-draw.text( (20,20), "Hello World", font=font )
+font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', 50)
+size = image.size
+draw.text( (20,size[1]-70), "Hello World", font=font )
 del draw
 image.save("ImageWithOverlay.jpg", "jpeg")
 
