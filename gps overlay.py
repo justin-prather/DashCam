@@ -3,9 +3,20 @@ import time
 import PIL, Image, ImageFont, ImageDraw
 import picamera
 import gps
+import pytz
+from pytz import reference
+import datetime
+
+localtime = reference.LocalTimezone()
 
 session = gps.gps("localhost", "2947") 
 session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE) 
+
+def time_adjust( s ):
+	date = datetime.datetime.strptime( s, '%Y-%m-%dT%H:%M:%S.000z')
+	date = date.replace(tzinfo=pytz.utc)
+	date = date.astimezone(localtime)
+	return date.strftime('%Y-%m-%d %H:%M:%S %Z')
 
 print "Gathering data"
 while True:
@@ -16,7 +27,7 @@ while True:
                 #print report
                 if report['class'] == 'TPV':
                         if hasattr(report, 'time') & hasattr(report, 'lat') & hasattr(report, 'lon') & hasattr(report, 'alt'):
-                                tim = report.time
+                                tim = time_adjust(report.time)
                                 lat = report.lat
                                 lon = report.lon
                                 alt = report.alt
@@ -37,6 +48,7 @@ with picamera.PiCamera() as camera:
         camera.resolution=(2592,1944)
         #camera.start_preview()
         time.sleep(5)
+	camera.image_effect = 'cartoon'
         camera.capture(stream, format = 'jpeg' )
 
 stream.seek(0)
