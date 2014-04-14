@@ -50,18 +50,25 @@ while True:
 				'%Y-%m-%dT%H:%M:%S.000z')
 			date = date.replace(tzinfo=pytz.utc)
 			date = date.astimezone(localtime)
-			date_s = date.strftime('%Y-%m-%d %H:%M:%S %Z')
-      			lat = report.lat
+			try:
+				date_s = date.strftime('%Y-%m-%d %H:%M:%S %Z')
+      			except:
+				pass
+			lat = report.lat
       			lon = report.lon
     			alt = report.alt
 			speed = report.speed * gps.MPS_TO_KPH
-			climb = report.climb
-			
+			climb = report.climb * gps.MPS_TO_KPH
+			if speed != 0:
+				grade = 100 * (abs(climb)/speed)
+			else:
+				grade = 0
 			screen.fill(black)
 			write( date_s, (30,10), red )
 			write( 'Latitude: '+ str(lat), (30,40), red )
 			write( 'Longitude: ' + str(lon), (30,70), red )
 			write( 'Altitude: ' + str(alt) + ' m', (30,100), red )
-			write( 'Speed: ' + str(speed) + ' Km/h', (30,130), red )
-			write( 'Climb: ' + str(climb) + ' m/s', (30,160), red )			
+			write( 'Speed: ' + str(speed) + ' km/h', (30,130), red )
+			write( 'Climb: ' + str(climb) + ' km/h', (30,160), red )			
+			write( 'Grade: ' + str(grade) + ' %', (30,190), red )
 	pygame.display.update()
