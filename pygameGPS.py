@@ -28,12 +28,14 @@ black = (0,0,0)
 screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 screen.fill(black)
 
-text = pygame.font.Font('freesansbold.ttf', 20)
+#text = pygame.font.Font('freesansbold.ttf', 20)
+font = pygame.font.Font('freesansbold.ttf', 20)
 
 def write(text, pos, color):
-	font = pygame.font.Font('freesansbold.ttf', 20)
 	label = font.render(text, 1, color)
 	screen.blit(label, pos)
+
+write( "Waiting for GPS lock", (30,30), red )
 while True:
 	for event in pygame.event.get():
 		if(event.type is MOUSEBUTTONDOWN):
@@ -46,8 +48,11 @@ while True:
    	if report['class'] == 'TPV':
     		if (hasattr(report, 'time') & hasattr(report, 'lat') & hasattr(report, 'lon') 
 				& hasattr(report, 'alt') & hasattr(report, 'speed') & hasattr(report, 'climb')):
-       			date = datetime.datetime.strptime( report.time, 
-				'%Y-%m-%dT%H:%M:%S.000z')
+       			try:
+				date = datetime.datetime.strptime( report.time, 
+					'%Y-%m-%dT%H:%M:%S.000z')
+			except:
+				pass
 			date = date.replace(tzinfo=pytz.utc)
 			date = date.astimezone(localtime)
 			try:
