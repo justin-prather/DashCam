@@ -12,6 +12,8 @@ os.putenv('SDL_FBDEV'      , '/dev/fb1')
 os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
 os.putenv('SDL_MOUSEDEV'   , '/dev/input/touchscreen')
 
+climb = 0
+
 localtime = reference.LocalTimezone()
 
 session = gps.gps("localhost", "2947" )
@@ -46,9 +48,8 @@ while True:
     	#see all report data, uncomment the line below print 
      	#print report
    	if report['class'] == 'TPV':
-    		if (hasattr(report, 'time') & hasattr(report, 'lat') & hasattr(report, 'lon') 
-				& hasattr(report, 'alt') & hasattr(report, 'speed') & hasattr(report, 'climb')):
-       			try:
+    	if hasattr(report, 'time'):
+       		try:
 				date = datetime.datetime.strptime( report.time, 
 					'%Y-%m-%dT%H:%M:%S.000z')
 			except:
@@ -57,17 +58,27 @@ while True:
 			date = date.astimezone(localtime)
 			try:
 				date_s = date.strftime('%Y-%m-%d %H:%M:%S %Z')
-      			except:
+      		except:
 				pass
+			
+		if hasattr(report, 'lat'):	
 			lat = report.lat
-      			lon = report.lon
-    			alt = report.alt
+      	
+      	if hasattr(report, 'lon'):	
+      		lon = report.lon
+      	if hasattr( report, 'alt'):
+    		alt = report.alt
+    	if hasattr( report, 'speed' ):
 			speed = report.speed * gps.MPS_TO_KPH
+		if hasattr( report, 'climb'):
 			climb = report.climb * gps.MPS_TO_KPH
-			if speed != 0:
-				grade = 100 * (abs(climb)/speed)
-			else:
-				grade = 0
+		
+		if speed != 0:
+			grade = 100 * (abs(climb)/speed)
+		else:
+			grade = 0
+
+		try:
 			screen.fill(black)
 			write( date_s, (30,10), red )
 			write( 'Latitude: '+ str(lat), (30,40), red )
@@ -76,4 +87,6 @@ while True:
 			write( 'Speed: ' + str(speed) + ' km/h', (30,130), red )
 			write( 'Climb: ' + str(climb) + ' km/h', (30,160), red )			
 			write( 'Grade: ' + str(grade) + ' %', (30,190), red )
+		except:
+			pass
 	pygame.display.update()
